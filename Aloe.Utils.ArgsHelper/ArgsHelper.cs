@@ -2,13 +2,19 @@
 
 public static class ArgsHelper
 {
-
     /// <summary>
     /// コマンドライン引数を前処理します。
     /// オプションが単独('--IsFlag')で bool を表す場合、値が指定されていなければ自動的に "true" を補完します。('--IsFlag' → '--IsFlag true')
     /// 短いオプション('-a')で、オプションと値が連結している場合は分割します。('-avalue' → '-a value')
     /// </summary>
-    public static string[] PreprocessArgs(string[] args, IEnumerable<string> flagArgs, IEnumerable<string> shortArgs)
+    /// <remarks>
+    /// `ConfigurationBuilder` ではセパレータ―(`=`) に対応しているので、前処理では分割しません。
+    /// </remarks>
+    /// <returns>前処理されたコマンドライン引数を返します。</returns>
+    public static string[] PreprocessArgs(
+        string[] args,
+        IEnumerable<string> flagArgs,
+        IEnumerable<string> shortArgs)
     {
         ArgumentNullException.ThrowIfNull(args, nameof(args));
         ArgumentNullException.ThrowIfNull(flagArgs, nameof(flagArgs));
@@ -55,6 +61,7 @@ public static class ArgsHelper
                         processedArgs.Add(shortOpt);
                         processedArgs.Add(currentArg.Substring(shortOpt.Length));
                     }
+
                     isShortOptionHandled = true;
                     break;
                 }
