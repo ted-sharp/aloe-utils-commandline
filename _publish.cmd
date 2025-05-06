@@ -13,7 +13,7 @@ if exist "publish" (
 
 rem Publish the application
 echo Building and publishing...
-dotnet publish .\Aloe.Utils.ArgsHelper.csproj -c Release -r win-x64 -o .\publish\AloeUtilsArgsHelper
+dotnet publish .\Aloe.Utils.ArgsHelper\Aloe.Utils.ArgsHelper.csproj -c Release -r win-x64 -o .\publish\AloeUtilsArgsHelper
 
 if %ERRORLEVEL% EQU 0 (
     echo.
