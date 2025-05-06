@@ -32,7 +32,7 @@ dotnet add package Aloe.Utils.ArgsHelper
 
 ## Usage
 
-### 1. `ArgsHelper.PreprocessArgs` を使って、コマンドライン引数を整形
+### 1. 基本的な使用方法
 
 ```csharp
 using Aloe.Utils.ArgsHelper;
@@ -44,15 +44,106 @@ var processedArgs = ArgsHelper.PreprocessArgs(
 );
 ```
 
-入力例
+入力例：
 
 ```cmd
 myapp.exe -uadmin --debug
 ```
 
-出力結果
+出力結果：
 
 ```csharp
 new[] { "-u", "admin", "--debug", "true" }
 ```
+
+### 2. 実践的な使用例
+
+以下は、実際のアプリケーションでの使用例です。コマンドライン引数、設定ファイル、シークレット、環境変数を統合的に管理する方法を示しています：
+
+```csharp
+public static class AppConfig
+{
+    // フラグ用のコマンドライン引数
+    public static readonly List<string> FlagArgs = new()
+    {
+        "--standalone",
+        "--debug",
+        "--verbose",
+    };
+
+    // 短い名前のコマンドライン引数
+    public static readonly List<string> ShortArgs = new()
+    {
+        "-u",
+        "-p",
+        "-c",
+    };
+
+    // コマンドライン引数と設定プロパティのマッピング
+    public static readonly Dictionary<string, string> Aliases = new()
+    {
+        { "--standalone", "AppSettings:IsStandalone" },
+        { "--debug", "AppSettings:IsDebug" },
+        { "-u", "AppSettings:Username" },
+        { "-p", "AppSettings:Password" },
+    };
+
+    // 設定ファイルの一覧
+    public static readonly List<string> ConfigFiles = new()
+    {
+        "appsettings.json",
+        "appsettings.Development.json",
+    };
+
+    public static IConfigurationRoot CreateConfigurationRoot(string[] args)
+    {
+        // コマンドライン引数の前処理
+        var processedArgs = ArgsHelper.PreprocessArgs(
+            args,
+            FlagArgs,
+            ShortArgs);
+
+        // 設定の構築
+        var builder = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            // 設定ファイル（優先順位: 低）
+            .AddJsonFile("appsettings.json", optional: true)
+            .AddJsonFile("appsettings.Development.json", optional: true)
+            // 開発環境用のシークレット（優先順位: 中）
+            .AddUserSecrets<Program>(optional: true)
+            // 環境変数（優先順位: 高）
+            .AddEnvironmentVariables()
+            // コマンドライン引数（優先順位: 最高）
+            .AddCommandLine(processedArgs, Aliases);
+
+        return builder.Build();
+    }
+}
+```
+
+この例では以下の機能を実装しています：
+
+* フラグオプションと短縮オプションの定義
+* コマンドライン引数と設定プロパティのマッピング
+* 複数の設定ソースの統合（JSON、シークレット、環境変数、コマンドライン）
+* 開発環境と本番環境の設定の分離
+
+### 3. 設定の読み取り
+
+```csharp
+// 設定の読み取り例
+var config = AppConfig.CreateConfigurationRoot(args);
+
+// 設定値の取得
+var isStandalone = config.GetValue<bool>("AppSettings:IsStandalone");
+var username = config.GetValue<string>("AppSettings:Username");
+```
+
+## ライセンス
+
+MIT License
+
+## 貢献
+
+バグ報告や機能要望は、GitHub Issues でお願いします。プルリクエストも歓迎します。
 
