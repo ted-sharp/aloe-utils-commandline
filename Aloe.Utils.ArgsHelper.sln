@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aloe.Utils.ArgsHelper.Test", "Aloe.Utils.ArgsHelper.Test\Aloe.Utils.ArgsHelper.Test.csproj", "{575DF69D-5A1C-4121-98C7-33376A289EA6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aloe.Utils.ArgsHelper", "Aloe.Utils.ArgsHelper\Aloe.Utils.ArgsHelper.csproj", "{4BC8F8A4-BA8E-777B-CFEC-57C38E73F653}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aloe.Utils.ArgsHelper.Tests", "Aloe.Utils.ArgsHelper.Tests\Aloe.Utils.ArgsHelper.Tests.csproj", "{800C9ECE-CA75-D26B-8AA8-16CA88409C8A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{575DF69D-5A1C-4121-98C7-33376A289EA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{575DF69D-5A1C-4121-98C7-33376A289EA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{575DF69D-5A1C-4121-98C7-33376A289EA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{575DF69D-5A1C-4121-98C7-33376A289EA6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4BC8F8A4-BA8E-777B-CFEC-57C38E73F653}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4BC8F8A4-BA8E-777B-CFEC-57C38E73F653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BC8F8A4-BA8E-777B-CFEC-57C38E73F653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BC8F8A4-BA8E-777B-CFEC-57C38E73F653}.Release|Any CPU.Build.0 = Release|Any CPU
+		{800C9ECE-CA75-D26B-8AA8-16CA88409C8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{800C9ECE-CA75-D26B-8AA8-16CA88409C8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{800C9ECE-CA75-D26B-8AA8-16CA88409C8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{800C9ECE-CA75-D26B-8AA8-16CA88409C8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
