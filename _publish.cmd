@@ -11,16 +11,24 @@ if exist "publish" (
     rmdir /s /q publish
 )
 
+rem Build the project
+echo Building the project...
+dotnet build .\Aloe.Utils.ArgsHelper\Aloe.Utils.ArgsHelper.csproj -c Release
+
 rem Publish the application
 echo Building and publishing...
 dotnet publish .\Aloe.Utils.ArgsHelper\Aloe.Utils.ArgsHelper.csproj -c Release -r win-x64 -o .\publish\AloeUtilsArgsHelper
 
+rem Create NuGet package
+echo Creating NuGet package...
+dotnet pack .\Aloe.Utils.ArgsHelper\Aloe.Utils.ArgsHelper.csproj -c Release -o .\publish
+
 if %ERRORLEVEL% EQU 0 (
     echo.
-    echo Publish completed successfully.
+    echo Publish and package creation completed successfully.
 ) else (
     echo.
-    echo Publish failed with error code %ERRORLEVEL%
+    echo Operation failed with error code %ERRORLEVEL%
 )
 
 pause
