@@ -21,7 +21,7 @@
 		<Title>Aloe.Utils.CommandLine</Title>
 		<PackageProjectUrl>https://github.com/ted-sharp/aloe-utils-commandline</PackageProjectUrl>
 		<PackageIcon>Aloe.png</PackageIcon>
-		<PackageTags>CommandLine, args</PackageTags>
+		<PackageTags>commandline;args;arguments;parser;preprocess;options;flags;cli;dotnet;utilities</PackageTags>
 		<Company />
 	</PropertyGroup>
 
