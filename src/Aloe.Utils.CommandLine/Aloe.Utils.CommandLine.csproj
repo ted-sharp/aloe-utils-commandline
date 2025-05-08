@@ -15,13 +15,14 @@
 		<Authors>ted-sharp</Authors>
 		<Description>Lightweight command-line args preprocessor for .NET applications</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<RepositoryUrl>https://github.com/ted-sharp/Aloe.Utils.CommandLine</RepositoryUrl>
+		<RepositoryUrl>https://github.com/ted-sharp/aloe-utils-commandline</RepositoryUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PlatformTarget>x64</PlatformTarget>
 		<Title>Aloe.Utils.CommandLine</Title>
 		<PackageProjectUrl>https://github.com/ted-sharp/aloe-utils-commandline</PackageProjectUrl>
 		<PackageIcon>Aloe.png</PackageIcon>
 		<PackageTags>CommandLine, args</PackageTags>
+		<Company />
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
