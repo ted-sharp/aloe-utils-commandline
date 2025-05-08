@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aloe.Utils.ArgsHelper", "Aloe.Utils.ArgsHelper\Aloe.Utils.ArgsHelper.csproj", "{4BC8F8A4-BA8E-777B-CFEC-57C38E73F653}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aloe.Utils.CommandLine", "Aloe.Utils.CommandLine\Aloe.Utils.CommandLine.csproj", "{4BC8F8A4-BA8E-777B-CFEC-57C38E73F653}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aloe.Utils.ArgsHelper.Tests", "Aloe.Utils.ArgsHelper.Tests\Aloe.Utils.ArgsHelper.Tests.csproj", "{800C9ECE-CA75-D26B-8AA8-16CA88409C8A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aloe.Utils.CommandLine.Tests", "Aloe.Utils.CommandLine.Tests\Aloe.Utils.CommandLine.Tests.csproj", "{FC5F1B26-0435-A714-842E-9E39BE4D8F24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{4BC8F8A4-BA8E-777B-CFEC-57C38E73F653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BC8F8A4-BA8E-777B-CFEC-57C38E73F653}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BC8F8A4-BA8E-777B-CFEC-57C38E73F653}.Release|Any CPU.Build.0 = Release|Any CPU
-		{800C9ECE-CA75-D26B-8AA8-16CA88409C8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{800C9ECE-CA75-D26B-8AA8-16CA88409C8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{800C9ECE-CA75-D26B-8AA8-16CA88409C8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{800C9ECE-CA75-D26B-8AA8-16CA88409C8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC5F1B26-0435-A714-842E-9E39BE4D8F24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC5F1B26-0435-A714-842E-9E39BE4D8F24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC5F1B26-0435-A714-842E-9E39BE4D8F24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC5F1B26-0435-A714-842E-9E39BE4D8F24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

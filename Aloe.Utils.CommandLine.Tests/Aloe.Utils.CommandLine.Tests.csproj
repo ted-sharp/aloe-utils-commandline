@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <RootNamespace>Aloe.Utils.ArgsHelper.Tests</RootNamespace>
+    <RootNamespace>Aloe.Utils.CommandLine.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aloe.Utils.ArgsHelper\Aloe.Utils.ArgsHelper.csproj" />
+    <ProjectReference Include="..\Aloe.Utils.CommandLine\Aloe.Utils.CommandLine.csproj" />
   </ItemGroup>
 
   <ItemGroup>

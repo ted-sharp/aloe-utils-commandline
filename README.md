@@ -1,6 +1,6 @@
-# Aloe.Utils.ArgsHelper
+# Aloe.Utils.CommandLine
 
-`Aloe.Utils.ArgsHelper` は、コマンドライン引数を柔軟に前処理する軽量ユーティリティです。  
+`Aloe.Utils.CommandLine` は、コマンドライン引数を柔軟に前処理する軽量ユーティリティです。  
 `--flag` のようなブールオプションの補完や、`-uadmin` のような短縮オプションと値の連結にも対応しています。  
 .NET の `IConfigurationBuilder.AddCommandLine(...)` と組み合わせて使用することで、アプリケーションの設定構成が簡潔かつ堅牢になります。
 
@@ -21,13 +21,13 @@
 NuGet パッケージマネージャーからインストールします：
 
 ```cmd
-Install-Package Aloe.Utils.ArgsHelper
+Install-Package Aloe.Utils.CommandLine
 ```
 
 あるいは、.NET CLI で：
 
 ```cmd
-dotnet add package Aloe.Utils.ArgsHelper
+dotnet add package Aloe.Utils.CommandLine
 ```
 
 ## Usage
@@ -35,7 +35,7 @@ dotnet add package Aloe.Utils.ArgsHelper
 ### 1. 基本的な使用方法
 
 ```csharp
-using Aloe.Utils.ArgsHelper;
+using Aloe.Utils.CommandLine;
 
 var processedArgs = ArgsHelper.PreprocessArgs(
     args,

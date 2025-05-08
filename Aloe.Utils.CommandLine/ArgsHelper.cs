@@ -1,5 +1,8 @@
-﻿namespace Aloe.Utils.ArgsHelper;
+﻿namespace Aloe.Utils.CommandLine;
 
+/// <summary>
+/// コマンドライン引数の前処理を行うユーティリティクラス。
+/// </summary>
 public static class ArgsHelper
 {
     /// <summary>

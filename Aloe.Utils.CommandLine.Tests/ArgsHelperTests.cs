@@ -1,7 +1,7 @@
 using Xunit;
-using Aloe.Utils.ArgsHelper;
+using Aloe.Utils.CommandLine;
 
-namespace Aloe.Utils.ArgsHelper.Tests;
+namespace Aloe.Utils.CommandLine.Tests;
 
 public class ArgsHelperTests
 {
@@ -61,4 +61,4 @@ public class ArgsHelperTests
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs));
     }
-} 
+}
