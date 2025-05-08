@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "Aloe.Utils.CommandLine.Samples": {
+      "commandName": "Project",
+      "commandLineArgs": "--standalone --debug -uadmin -ppassword123",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+} 
