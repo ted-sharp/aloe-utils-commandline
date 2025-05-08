@@ -5,31 +5,32 @@
 [![License](https://img.shields.io/github/license/yourusername/aloe-utils-commandline.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-9.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/9.0)
 
-`Aloe.Utils.CommandLine` is a lightweight utility for flexible preprocessing of command-line arguments.  
-It supports completion of boolean options like `--flag` and splitting of concatenated short options with values like `-uadmin`.  
-When combined with .NET's `IConfigurationBuilder.AddCommandLine(...)`, it makes your application's configuration setup concise and robust.
 
-## Key Features
+`Aloe.Utils.CommandLine` は、コマンドライン引数を柔軟に前処理する軽量ユーティリティです。  
+`--flag` のようなブールオプションの補完や、`-uadmin` のような短縮オプションと値の連結にも対応しています。  
+.NET の `IConfigurationBuilder.AddCommandLine(...)` と組み合わせて使用することで、アプリケーションの設定構成が簡潔かつ堅牢になります。
 
-* Completes standalone options like --flag to true
-* Splits concatenated options like -uadmin → -u admin
-* Zero-dependency lightweight utility
-* Perfect for integration with DI / IConfiguration / appsettings.json
+## 主な機能
 
-## Requirements
+* --flag のような単独オプションを true に補完
+* -uadmin → -u admin に分割
+* プラグイン不要・ゼロ依存の軽量ユーティリティ
+* DI / IConfiguration / appsettings.json などとの統合に最適
 
-* .NET 9 or later
-* Compatible with Microsoft.Extensions.Configuration
+## 対応環境
+
+* .NET 9 以降
+* Microsoft.Extensions.Configuration と併用可能
 
 ## Install
 
-Install via NuGet Package Manager:
+NuGet パッケージマネージャーからインストールします：
 
 ```cmd
 Install-Package Aloe.Utils.CommandLine
 ```
 
-Or using .NET CLI:
+あるいは、.NET CLI で：
 
 ```cmd
 dotnet add package Aloe.Utils.CommandLine
@@ -37,7 +38,7 @@ dotnet add package Aloe.Utils.CommandLine
 
 ## Usage
 
-### 1. Basic Usage
+### 1. 基本的な使用方法
 
 ```csharp
 using Aloe.Utils.CommandLine;
@@ -49,26 +50,26 @@ var processedArgs = ArgsHelper.PreprocessArgs(
 );
 ```
 
-Input example:
+入力例：
 
 ```cmd
 myapp.exe -uadmin --debug
 ```
 
-Output result:
+出力結果：
 
 ```csharp
 new[] { "-u", "admin", "--debug", "true" }
 ```
 
-### 2. Practical Example
+### 2. 実践的な使用例
 
-Here's a practical example showing how to manage command-line arguments, configuration files, secrets, and environment variables in an integrated way:
+以下は、実際のアプリケーションでの使用例です。コマンドライン引数、設定ファイル、シークレット、環境変数を統合的に管理する方法を示しています：
 
 ```csharp
 public static class AppConfig
 {
-    // Command-line arguments for flags
+    // フラグ用のコマンドライン引数
     public static readonly List<string> FlagArgs = new()
     {
         "--standalone",
@@ -76,7 +77,7 @@ public static class AppConfig
         "--verbose",
     };
 
-    // Short-form command-line arguments
+    // 短い名前のコマンドライン引数
     public static readonly List<string> ShortArgs = new()
     {
         "-u",
@@ -84,7 +85,7 @@ public static class AppConfig
         "-c",
     };
 
-    // Mapping between command-line arguments and configuration properties
+    // コマンドライン引数と設定プロパティのマッピング
     public static readonly Dictionary<string, string> Aliases = new()
     {
         { "--standalone", "AppSettings:IsStandalone" },
@@ -93,7 +94,7 @@ public static class AppConfig
         { "-p", "AppSettings:Password" },
     };
 
-    // List of configuration files
+    // 設定ファイルの一覧
     public static readonly List<string> ConfigFiles = new()
     {
         "appsettings.json",
@@ -102,23 +103,23 @@ public static class AppConfig
 
     public static IConfigurationRoot CreateConfigurationRoot(string[] args)
     {
-        // Preprocess command-line arguments
+        // コマンドライン引数の前処理
         var processedArgs = ArgsHelper.PreprocessArgs(
             args,
             FlagArgs,
             ShortArgs);
 
-        // Build configuration
+        // 設定の構築
         var builder = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
-            // Configuration files (lowest priority)
+            // 設定ファイル（優先順位: 低）
             .AddJsonFile("appsettings.json", optional: true)
             .AddJsonFile("appsettings.Development.json", optional: true)
-            // Development secrets (medium priority)
+            // 開発環境用のシークレット（優先順位: 中）
             .AddUserSecrets<Program>(optional: true)
-            // Environment variables (high priority)
+            // 環境変数（優先順位: 高）
             .AddEnvironmentVariables()
-            // Command-line arguments (highest priority)
+            // コマンドライン引数（優先順位: 最高）
             .AddCommandLine(processedArgs, Aliases);
 
         return builder.Build();
@@ -126,29 +127,29 @@ public static class AppConfig
 }
 ```
 
-This example implements the following features:
+この例では以下の機能を実装しています：
 
-* Definition of flag options and short-form options
-* Mapping between command-line arguments and configuration properties
-* Integration of multiple configuration sources (JSON, secrets, environment variables, command-line)
-* Separation of development and production settings
+* フラグオプションと短縮オプションの定義
+* コマンドライン引数と設定プロパティのマッピング
+* 複数の設定ソースの統合（JSON、シークレット、環境変数、コマンドライン）
+* 開発環境と本番環境の設定の分離
 
-### 3. Reading Configuration
+### 3. 設定の読み取り
 
 ```csharp
-// Example of reading configuration
+// 設定の読み取り例
 var config = AppConfig.CreateConfigurationRoot(args);
 
-// Getting configuration values
+// 設定値の取得
 var isStandalone = config.GetValue<bool>("AppSettings:IsStandalone");
 var username = config.GetValue<string>("AppSettings:Username");
 ```
 
-## License
+## ライセンス
 
 MIT License
 
-## Contributing
+## 貢献
 
-Please report bugs and feature requests through GitHub Issues. Pull requests are welcome.
+バグ報告や機能要望は、GitHub Issues でお願いします。プルリクエストも歓迎します。
 
