@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Aloe.Utils.CommandLine.Samples": {
+    "Debug": {
       "commandName": "Project",
       "commandLineArgs": "--standalone --debug -uadmin -ppassword123",
       "environmentVariables": {
@@ -8,4 +8,4 @@
       }
     }
   }
-} 
+}
