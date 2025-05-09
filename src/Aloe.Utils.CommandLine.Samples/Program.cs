@@ -47,12 +47,12 @@ public static class AppConfig
     }
 }
 
-public class AppSettings
+public record AppSettings
 {
-    public bool IsStandalone { get; set; }
-    public bool IsDebug { get; set; }
-    public string? Username { get; set; }
-    public string? Password { get; set; }
+    public bool IsStandalone { get; init; }
+    public bool IsDebug { get; init; }
+    public string? Username { get; init; }
+    public string? Password { get; init; }
 }
 
 public class Program
