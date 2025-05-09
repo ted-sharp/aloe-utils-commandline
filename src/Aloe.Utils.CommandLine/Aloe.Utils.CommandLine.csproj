@@ -23,6 +23,8 @@
 		<PackageIcon>Aloe.png</PackageIcon>
 		<PackageTags>commandline;args;arguments;parser;preprocess;options;flags;cli;dotnet;utilities</PackageTags>
 		<Company />
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
