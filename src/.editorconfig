@@ -77,3 +77,5 @@ dotnet_diagnostic.CA2254.severity = none
 dotnet_diagnostic.IDE0290.severity = none
 # fluent にコレクション式を使用する (IDE0305)
 dotnet_diagnostic.IDE0305.severity = none
+# SA1629:“DocumentationTextMustBeginWithCapitalLetter” を無効化
+dotnet_diagnostic.SA1629.severity = none

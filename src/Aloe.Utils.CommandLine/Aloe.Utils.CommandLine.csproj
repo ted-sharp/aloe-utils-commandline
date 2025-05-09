@@ -6,6 +6,7 @@
 		<Nullable>enable</Nullable>
 		<RootNamespace>$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
+		<Platforms>x64</Platforms>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -25,17 +26,21 @@
 		<Company />
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	<PropertyGroup>
 	  <IsTrimmable>True</IsTrimmable>
 	  <IsAotCompatible>True</IsAotCompatible>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-	  <IsTrimmable>True</IsTrimmable>
-	  <IsAotCompatible>True</IsAotCompatible>
-	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="stylecop.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <AdditionalFiles Include="stylecop.json" />
+	</ItemGroup>
 
 	<ItemGroup>
 	  <None Include="..\README.md">
