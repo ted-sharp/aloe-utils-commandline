@@ -1,12 +1,12 @@
 # Aloe.Utils.CommandLine
 
+[![English](https://img.shields.io/badge/Language-English-blue)](./README.md)
+[![日本語](https://img.shields.io/badge/言語-日本語-blue)](./README.ja.md)
+
 [![NuGet Version](https://img.shields.io/nuget/v/Aloe.Utils.CommandLine.svg)](https://www.nuget.org/packages/Aloe.Utils.CommandLine)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Aloe.Utils.CommandLine.svg)](https://www.nuget.org/packages/Aloe.Utils.CommandLine)
 [![License](https://img.shields.io/github/license/ted-sharp/aloe-utils-commandline.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-9.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/9.0)
-
-[![English](https://img.shields.io/badge/Language-English-blue)](./README.md)
-[![日本語](https://img.shields.io/badge/言語-日本語-blue)](./README.ja.md)
 
 `Aloe.Utils.CommandLine` is a lightweight utility for flexible preprocessing of command-line arguments.  
 It supports completion of boolean options like `--flag` and splitting of concatenated short options with values like `-uadmin`.  
