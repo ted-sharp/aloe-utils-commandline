@@ -9,7 +9,7 @@ rem Define directories to clean
 set "CLEAN_DIRS=.vs bin obj publish logs tmp"
 
 rem Clean directories recursively
-for %%d in (%CLEAN_DIRS%) do (
+for /r %%d in (%CLEAN_DIRS%) do (
     if exist "%%d" (
         echo Removing directory: "%%d"
         rd /s /q "%%d"
