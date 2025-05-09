@@ -57,7 +57,7 @@ public class AppSettings
 
 public class Program
 {
-    public static async Task<int> Main(string[] args)
+    public static int Main(string[] args)
     {
         var builder = Host.CreateApplicationBuilder(args);
 
