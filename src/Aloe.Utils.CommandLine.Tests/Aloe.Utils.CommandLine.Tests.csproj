@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <RootNamespace>Aloe.Utils.CommandLine.Tests</RootNamespace>
-    <Platforms>x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
