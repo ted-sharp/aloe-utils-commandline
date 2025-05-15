@@ -14,7 +14,7 @@ When combined with .NET's `IConfigurationBuilder.AddCommandLine(...)`, it makes 
 
 ## Key Features
 
-* Completes standalone options like --flag to true
+* Completes standalone options like --flag → --flag true
 * Splits concatenated options like -uadmin → -u admin
 * Zero-dependency lightweight utility
 * Perfect for integration with DI / IConfiguration / appsettings.json
@@ -96,13 +96,6 @@ public static class AppConfig
         { "-p", "AppSettings:Password" },
     };
 
-    // List of configuration files
-    public static readonly List<string> ConfigFiles = new()
-    {
-        "appsettings.json",
-        "appsettings.Development.json",
-    };
-
     public static IConfigurationRoot CreateConfigurationRoot(string[] args)
     {
         // Preprocess command-line arguments
@@ -154,4 +147,3 @@ MIT License
 ## Contributing
 
 Please report bugs and feature requests through GitHub Issues. Pull requests are welcome.
-

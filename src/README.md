@@ -4,8 +4,8 @@ A lightweight utility for flexible preprocessing of command-line arguments. It s
 
 ## Key Features
 
-* Completes standalone options like --flag to true
-* Splits concatenated options like -uadmin to -u admin
+* Completes standalone options like --flag → --flag true
+* Splits concatenated options like -uadmin → -u admin
 * Zero-dependency lightweight utility
 * Perfect for integration with DI / IConfiguration / appsettings.json
 
@@ -13,12 +13,6 @@ A lightweight utility for flexible preprocessing of command-line arguments. It s
 
 * .NET 9 or later
 * Compatible with Microsoft.Extensions.Configuration
-
-## Installation
-
-```cmd
-dotnet add package Aloe.Utils.CommandLine
-```
 
 ## Usage Example
 
@@ -41,3 +35,7 @@ Output result:
 ```csharp
 new[] { "-u", "admin", "--debug", "true" }
 ```
+
+## License
+
+MIT License

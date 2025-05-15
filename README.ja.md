@@ -14,7 +14,7 @@
 
 ## 主な機能
 
-* --flag のような単独オプションを true に補完
+* --flag → --flag true に補完
 * -uadmin → -u admin に分割
 * プラグイン不要・ゼロ依存の軽量ユーティリティ
 * DI / IConfiguration / appsettings.json などとの統合に最適
@@ -94,13 +94,6 @@ public static class AppConfig
         { "--debug", "AppSettings:IsDebug" },
         { "-u", "AppSettings:Username" },
         { "-p", "AppSettings:Password" },
-    };
-
-    // 設定ファイルの一覧
-    public static readonly List<string> ConfigFiles = new()
-    {
-        "appsettings.json",
-        "appsettings.Development.json",
     };
 
     public static IConfigurationRoot CreateConfigurationRoot(string[] args)
