@@ -47,8 +47,8 @@ using Aloe.Utils.CommandLine;
 
 var processedArgs = ArgsHelper.PreprocessArgs(
     args,
-    flagArgs: new[] { "--debug", "--standalone" },
-    shortArgs: new[] { "-u", "-p" }
+    flagArgs: ["--debug", "--standalone"],
+    shortArgs: ["-u", "-p"]
 );
 ```
 
@@ -72,20 +72,20 @@ new[] { "-u", "admin", "--debug", "true" }
 public static class AppConfig
 {
     // フラグ用のコマンドライン引数
-    public static readonly List<string> FlagArgs = new()
-    {
+    public static readonly List<string> FlagArgs =
+    [
         "--standalone",
         "--debug",
         "--verbose",
-    };
+    ];
 
     // 短い名前のコマンドライン引数
-    public static readonly List<string> ShortArgs = new()
-    {
+    public static readonly List<string> ShortArgs =
+    [
         "-u",
         "-p",
         "-c",
-    };
+    ];
 
     // コマンドライン引数と設定プロパティのマッピング
     public static readonly Dictionary<string, string> Aliases = new()

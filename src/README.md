@@ -21,8 +21,8 @@ using Aloe.Utils.CommandLine;
 
 var processedArgs = ArgsHelper.PreprocessArgs(
     args,
-    flagArgs: new[] { "--debug", "--standalone" },
-    shortArgs: new[] { "-u", "-p" }
+    flagArgs: ["--debug", "--standalone"],
+    shortArgs: ["-u", "-p"]
 );
 ```
 

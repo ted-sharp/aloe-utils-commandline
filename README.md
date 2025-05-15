@@ -47,8 +47,8 @@ using Aloe.Utils.CommandLine;
 
 var processedArgs = ArgsHelper.PreprocessArgs(
     args,
-    flagArgs: new[] { "--debug", "--standalone" },
-    shortArgs: new[] { "-u", "-p" }
+    flagArgs: ["--debug", "--standalone" ],
+    shortArgs: ["-u", "-p" ]
 );
 ```
 
@@ -72,20 +72,20 @@ Here's a practical example showing how to manage command-line arguments, configu
 public static class AppConfig
 {
     // Command-line arguments for flags
-    public static readonly List<string> FlagArgs = new()
-    {
+    public static readonly List<string> FlagArgs =
+    [
         "--standalone",
         "--debug",
         "--verbose",
-    };
+    ];
 
     // Short-form command-line arguments
-    public static readonly List<string> ShortArgs = new()
-    {
+    public static readonly List<string> ShortArgs =
+    [
         "-u",
         "-p",
         "-c",
-    };
+    ];
 
     // Mapping between command-line arguments and configuration properties
     public static readonly Dictionary<string, string> Aliases = new()
