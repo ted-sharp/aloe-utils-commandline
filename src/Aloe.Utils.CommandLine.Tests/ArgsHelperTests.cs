@@ -21,6 +21,51 @@ public class ArgsHelperTests
     }
 
     [Fact]
+    public void PreprocessArgs_FlagFollowedByExplicitValue_ShouldNotAppendTrue()
+    {
+        // Arrange
+        string[] args = ["--IsFlag", "false"]; // 明示的な値が続く
+        string[] flagArgs = ["--IsFlag"];
+        string[] shortArgs = [];
+
+        // Act
+        var result = ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs);
+
+        // Assert
+        Assert.Equal(["--IsFlag", "false"], result);
+    }
+
+    [Fact]
+    public void PreprocessArgs_EqualsSeparator_ShouldPassThrough()
+    {
+        // Arrange
+        string[] args = ["--IsFlag=false"]; // '=' はそのまま素通し
+        string[] flagArgs = ["--IsFlag"];
+        string[] shortArgs = [];
+
+        // Act
+        var result = ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs);
+
+        // Assert
+        Assert.Equal(["--IsFlag=false"], result);
+    }
+
+    [Fact]
+    public void PreprocessArgs_ShortOptionLongestMatch_ShouldPreferLonger()
+    {
+        // Arrange
+        string[] args = ["-abvalue"]; // "-ab" と "-a" がある場合は "-ab" を優先
+        string[] flagArgs = [];
+        string[] shortArgs = ["-a", "-ab"];
+
+        // Act
+        var result = ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs);
+
+        // Assert
+        Assert.Equal(["-ab", "value"], result);
+    }
+
+    [Fact]
     public void PreprocessArgs_WithShortArgs_ShouldSplitCombinedValue()
     {
         // Arrange
