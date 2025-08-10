@@ -11,7 +11,7 @@
 	<PropertyGroup>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageId>Aloe.Utils.CommandLine</PackageId>
-		<Version>1.0.2</Version>
+		<Version>1.0.3</Version>
 		<Authors>ted-sharp</Authors>
 		<Description>Lightweight command-line args preprocessor for .NET applications</Description>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
