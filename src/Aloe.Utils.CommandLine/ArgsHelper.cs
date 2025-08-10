@@ -2,6 +2,8 @@
 // Copyright (c) ted-sharp. All rights reserved.
 // </copyright>
 
+using System.Linq;
+
 namespace Aloe.Utils.CommandLine;
 
 /// <summary>
@@ -100,7 +102,8 @@ public static class ArgsHelper
             return false;
         }
 
-        foreach (var shortOpt in shortOptions)
+        // 決定論的に最長一致で判定する（例: "-ab" と "-a" が両方ある場合は "-ab" を優先）
+        foreach (var shortOpt in shortOptions.OrderByDescending(s => s.Length))
         {
             if (arg.StartsWith(shortOpt))
             {
