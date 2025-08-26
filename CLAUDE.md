@@ -42,7 +42,7 @@ dotnet run --project src/Aloe.Utils.CommandLine.Samples/ -- --debug -uadmin
 src/_publish.cmd
 
 # Manual publish commands:
-dotnet publish src/Aloe.Utils.CommandLine/Aloe.Utils.CommandLine.csproj -c Release -r win-x64 -o publish/AloeUtilsCommandLine
+dotnet publish src/Aloe.Utils.CommandLine/Aloe.Utils.CommandLine.csproj -c Release -o publish/AloeUtilsCommandLine
 dotnet pack src/Aloe.Utils.CommandLine/Aloe.Utils.CommandLine.csproj -c Release -o publish
 ```
 

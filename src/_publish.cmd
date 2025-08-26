@@ -17,7 +17,7 @@ dotnet build .\Aloe.Utils.CommandLine\Aloe.Utils.CommandLine.csproj -c Release
 
 rem Publish the application
 echo Building and publishing...
-dotnet publish .\Aloe.Utils.CommandLine\Aloe.Utils.CommandLine.csproj -c Release -r win-x64 -o .\publish\AloeUtilsCommandLine
+dotnet publish .\Aloe.Utils.CommandLine\Aloe.Utils.CommandLine.csproj -c Release -o .\publish\AloeUtilsCommandLine
 
 rem Create NuGet package
 echo Creating NuGet package...
