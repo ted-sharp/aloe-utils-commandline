@@ -37,11 +37,11 @@ public static class ArgsHelper
         ArgumentNullException.ThrowIfNull(flagArgs, nameof(flagArgs));
         ArgumentNullException.ThrowIfNull(shortArgs, nameof(shortArgs));
 
-        var processedArgs = new List<string>();
+        var processedArgs = new List<string>(capacity: args.Length * 2);
 
         // HashSetを使用して検索パフォーマンスを最適化
         var flags = new HashSet<string>(flagArgs);
-        var shorts = new HashSet<string>(shortArgs);
+        var sortedShorts = shortArgs.OrderByDescending(s => s.Length).ToArray();
 
         for (var i = 0; i < args.Length; i++)
         {
@@ -62,7 +62,7 @@ public static class ArgsHelper
             }
 
             // 短いオプションの処理
-            if (TryHandleShortOption(currentArg, shorts, processedArgs))
+            if (TryHandleShortOption(currentArg, sortedShorts, processedArgs))
             {
                 continue;
             }
@@ -88,12 +88,12 @@ public static class ArgsHelper
     /// 3. オプションと値の分割（必要な場合）
     /// </remarks>
     /// <param name="arg">処理対象の引数</param>
-    /// <param name="shortOptions">短いオプションのセット</param>
+    /// <param name="sortedShortOptions">長さ降順でソートされた短いオプションの配列</param>
     /// <param name="processedArgs">処理済みの引数リスト</param>
     /// <returns>短いオプションとして処理された場合はtrue、それ以外はfalse</returns>
     private static bool TryHandleShortOption(
         string arg,
-        HashSet<string> shortOptions,
+        string[] sortedShortOptions,
         List<string> processedArgs)
     {
         // 基本的な形式チェック：'-'で始まり、長さが2以上であることを確認
@@ -103,7 +103,8 @@ public static class ArgsHelper
         }
 
         // 決定論的に最長一致で判定する（例: "-ab" と "-a" が両方ある場合は "-ab" を優先）
-        foreach (var shortOpt in shortOptions.OrderByDescending(s => s.Length))
+        // 短いオプションは既に長さ降順でソート済み
+        foreach (var shortOpt in sortedShortOptions)
         {
             if (arg.StartsWith(shortOpt))
             {
