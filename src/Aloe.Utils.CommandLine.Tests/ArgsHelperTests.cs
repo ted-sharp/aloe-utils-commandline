@@ -106,4 +106,79 @@ public class ArgsHelperTests
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs));
     }
+
+    [Fact]
+    public void PreprocessArgs_WithEmptyArgs_ShouldReturnEmpty()
+    {
+        // Arrange
+        string[] args = [];
+        string[] flagArgs = [];
+        string[] shortArgs = [];
+
+        // Act
+        var result = ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs);
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public void PreprocessArgs_WithEmptyStringArg_ShouldPreserve()
+    {
+        // Arrange
+        string[] args = [""];
+        string[] flagArgs = [];
+        string[] shortArgs = [];
+
+        // Act
+        var result = ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs);
+
+        // Assert
+        Assert.Equal([""], result);
+    }
+
+    [Fact]
+    public void PreprocessArgs_WithDuplicateFlags_ShouldProcessBoth()
+    {
+        // Arrange
+        string[] args = ["--debug", "--debug"];
+        string[] flagArgs = ["--debug"];
+        string[] shortArgs = [];
+
+        // Act
+        var result = ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs);
+
+        // Assert
+        Assert.Equal(["--debug", "true", "--debug", "true"], result);
+    }
+
+    [Fact]
+    public void PreprocessArgs_FlagVsShortOption_ShouldPrioritizeFlag()
+    {
+        // Arrange
+        string[] args = ["-u"];
+        string[] flagArgs = ["-u"]; // 同じ文字列がフラグとショートオプション両方にある場合
+        string[] shortArgs = ["-u"];
+
+        // Act
+        var result = ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs);
+
+        // Assert
+        Assert.Equal(["-u", "true"], result); // フラグが優先される
+    }
+
+    [Fact]
+    public void PreprocessArgs_WithSingleHyphen_ShouldPreserve()
+    {
+        // Arrange
+        string[] args = ["-"];
+        string[] flagArgs = [];
+        string[] shortArgs = [];
+
+        // Act
+        var result = ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs);
+
+        // Assert
+        Assert.Equal(["-"], result);
+    }
 }
