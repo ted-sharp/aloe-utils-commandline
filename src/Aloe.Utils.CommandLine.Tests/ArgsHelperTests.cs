@@ -1,6 +1,3 @@
-using Xunit;
-using Aloe.Utils.CommandLine;
-
 namespace Aloe.Utils.CommandLine.Tests;
 
 public class ArgsHelperTests
@@ -102,6 +99,30 @@ public class ArgsHelperTests
         string[] args = null!;
         string[] flagArgs = [];
         string[] shortArgs = [];
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs));
+    }
+
+    [Fact]
+    public void PreprocessArgs_WithNullFlagArgs_ShouldThrowArgumentNullException()
+    {
+        // Arrange
+        string[] args = [];
+        string[] flagArgs = null!;
+        string[] shortArgs = [];
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs));
+    }
+
+    [Fact]
+    public void PreprocessArgs_WithNullShortArgs_ShouldThrowArgumentNullException()
+    {
+        // Arrange
+        string[] args = [];
+        string[] flagArgs = [];
+        string[] shortArgs = null!;
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs));

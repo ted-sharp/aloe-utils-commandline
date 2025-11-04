@@ -2,8 +2,6 @@
 // Copyright (c) ted-sharp. All rights reserved.
 // </copyright>
 
-using System.Linq;
-
 namespace Aloe.Utils.CommandLine;
 
 /// <summary>
@@ -53,7 +51,7 @@ public static class ArgsHelper
                 processedArgs.Add(currentArg);
 
                 // 次のトークンが存在しない、または '-' で始まるなら "true" を付与
-                if (i + 1 >= args.Length || args[i + 1].StartsWith("-"))
+                if (i + 1 >= args.Length || args[i + 1].StartsWith("-", StringComparison.Ordinal))
                 {
                     processedArgs.Add("true");
                 }
@@ -97,7 +95,7 @@ public static class ArgsHelper
         List<string> processedArgs)
     {
         // 基本的な形式チェック：'-'で始まり、長さが2以上であることを確認
-        if (arg.Length <= 1 || !arg.StartsWith("-"))
+        if (arg.Length <= 1 || !arg.StartsWith("-", StringComparison.Ordinal))
         {
             return false;
         }
@@ -106,7 +104,7 @@ public static class ArgsHelper
         // 短いオプションは既に長さ降順でソート済み
         foreach (var shortOpt in sortedShortOptions)
         {
-            if (arg.StartsWith(shortOpt))
+            if (arg.StartsWith(shortOpt, StringComparison.Ordinal))
             {
                 // 短いオプションそのものだけの場合はそのまま追加
                 if (arg.Length == shortOpt.Length)
@@ -119,7 +117,7 @@ public static class ArgsHelper
                     // 例: "-uadmin" → "-u" "admin"
                     // 例: "-ppwd" → "-p" "pwd"
                     processedArgs.Add(shortOpt);
-                    processedArgs.Add(arg.Substring(shortOpt.Length));
+                    processedArgs.Add(arg[shortOpt.Length..]);
                 }
 
                 return true;

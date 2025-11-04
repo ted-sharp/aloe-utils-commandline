@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Aloe.Utils.CommandLine;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Aloe.Utils.CommandLine;
+
+namespace Aloe.Utils.CommandLine.Samples;
 
 public static class AppConfig
 {
@@ -77,12 +79,10 @@ public class Program
 
 public class App
 {
-    private readonly IConfiguration _configuration;
     private readonly AppSettings _appSettings;
 
-    public App(IConfiguration configuration, IOptions<AppSettings> appSettings)
+    public App(IOptions<AppSettings> appSettings)
     {
-        this._configuration = configuration;
         this._appSettings = appSettings.Value;
     }
 
