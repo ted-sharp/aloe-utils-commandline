@@ -142,6 +142,7 @@ _ReSharper*/
 **/quality-reports/
 **/.sonarqube/
 **/.scannerwork/
+**/.quality-cache/
 
 # TeamCity is a build add-in
 _TeamCity*
