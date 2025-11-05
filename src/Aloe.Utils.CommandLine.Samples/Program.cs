@@ -1,4 +1,3 @@
-﻿using Aloe.Utils.CommandLine;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,21 +7,21 @@ namespace Aloe.Utils.CommandLine.Samples;
 
 public static class AppConfig
 {
-    public static readonly List<string> FlagArgs =
+    public static readonly IReadOnlyList<string> FlagArgs =
     [
         "--standalone",
         "--debug",
         "--verbose",
     ];
 
-    public static readonly List<string> ShortArgs =
+    public static readonly IReadOnlyList<string> ShortArgs =
     [
         "-u",
         "-p",
         "-c",
     ];
 
-    public static readonly Dictionary<string, string> Aliases = new()
+    public static readonly IReadOnlyDictionary<string, string> Aliases = new Dictionary<string, string>
     {
         { "--standalone", "AppSettings:IsStandalone" },
         { "--debug", "AppSettings:IsDebug" },
@@ -57,7 +56,7 @@ public record AppSettings
     public string? Password { get; init; }
 }
 
-public class Program
+public static class Program
 {
     public static int Main(string[] args)
     {

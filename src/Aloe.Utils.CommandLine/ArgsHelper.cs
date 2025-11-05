@@ -1,4 +1,4 @@
-﻿// <copyright file="ArgsHelper.cs" company="ted-sharp">
+// <copyright file="ArgsHelper.cs" company="ted-sharp">
 // Copyright (c) ted-sharp. All rights reserved.
 // </copyright>
 
@@ -51,7 +51,7 @@ public static class ArgsHelper
                 processedArgs.Add(currentArg);
 
                 // 次のトークンが存在しない、または '-' で始まるなら "true" を付与
-                if (i + 1 >= args.Length || args[i + 1].StartsWith("-", StringComparison.Ordinal))
+                if (i + 1 >= args.Length || args[i + 1].StartsWith('-'))
                 {
                     processedArgs.Add("true");
                 }
@@ -95,7 +95,7 @@ public static class ArgsHelper
         List<string> processedArgs)
     {
         // 基本的な形式チェック：'-'で始まり、長さが2以上であることを確認
-        if (arg.Length <= 1 || !arg.StartsWith("-", StringComparison.Ordinal))
+        if (arg.Length <= 1 || !arg.StartsWith('-'))
         {
             return false;
         }
