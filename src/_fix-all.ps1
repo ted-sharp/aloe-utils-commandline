@@ -138,7 +138,7 @@ function Invoke-ParallelTasks {
         [int]$TimeoutSeconds = 600
     )
 
-    $jobs = @()
+    $jobs = [System.Collections.ArrayList]@()
     $results = @{}
 
     try {
@@ -150,18 +150,20 @@ function Invoke-ParallelTasks {
                 if ($completed) {
                     $results[$completed.Name] = Receive-Job $completed
                     Remove-Job $completed
-                    $jobs = $jobs | Where-Object { $_.Id -ne $completed.Id }
+                    $jobs.Remove($completed) | Out-Null
                 }
             }
 
             $job = Start-Job -Name $task.Name -ScriptBlock $task.ScriptBlock -ArgumentList $task.Arguments
-            $jobs += $job
+            $jobs.Add($job) | Out-Null
         }
 
-        # Wait for remaining jobs
+        # Wait for remaining jobs (create a copy to avoid modification during enumeration)
         if ($jobs.Count -gt 0) {
-            $completed = $jobs | Wait-Job -Timeout $TimeoutSeconds
-            foreach ($job in $jobs) {
+            $jobsCopy = $jobs.ToArray()
+            $null = $jobsCopy | Wait-Job -Timeout $TimeoutSeconds
+            
+            foreach ($job in $jobsCopy) {
                 $results[$job.Name] = Receive-Job $job
                 Remove-Job $job
             }
@@ -169,8 +171,9 @@ function Invoke-ParallelTasks {
 
         return $results
     } catch {
-        # Cleanup on error
-        $jobs | Stop-Job -PassThru | Remove-Job
+        # Cleanup on error (create a copy before stopping)
+        $jobsCopy = $jobs.ToArray()
+        $jobsCopy | Stop-Job -PassThru | Remove-Job
         throw
     }
 }
@@ -178,8 +181,8 @@ function Invoke-ParallelTasks {
 # ===========================================
 # Enhanced Task Definitions
 # ===========================================
-function Get-TaskDefinitions {
-    param($config, $solutionName, $solutionBaseName, $checkOnly, $skipReSharper, $skipSonar)
+function Get-WriteTaskDefinitions {
+    param($config, $solutionName, $solutionBaseName, $checkOnly, $skipReSharper)
 
     $tasks = @()
 
@@ -207,14 +210,25 @@ function Get-TaskDefinitions {
                     $defaultSettings | Out-File -FilePath $settingsFile -Encoding UTF8
                 }
 
-                cleanupcode $solution --profile=$profile 2>&1 | Out-Null
+                # Try cleanup without profile parameter first (uses default/full cleanup)
+                # If settings file has Default profile, it will be used automatically
+                $cleanupOutput = cleanupcode $solution 2>&1
+                $cleanupExitCode = $LASTEXITCODE
 
-                if ($LASTEXITCODE -eq 0) {
+                if ($cleanupExitCode -eq 0) {
                     $gitStatus = git status --short 2>$null | Where-Object { $_ -match '\.cs$' }
                     $fixedCount = ($gitStatus | Measure-Object).Count
                     return @{ Success = $true; Message = "Cleanup completed"; FixedFiles = $fixedCount }
                 } else {
-                    return @{ Success = $false; Message = "Cleanup failed"; ExitCode = $LASTEXITCODE }
+                    # Extract useful error messages
+                    $errorLines = $cleanupOutput | Where-Object { $_ -match "(error|exception|failed|unknown|invalid)" }
+                    $errorText = if ($errorLines) { 
+                        ($errorLines | Select-Object -First 15 | Out-String).Trim() 
+                    } else { 
+                        # Show last 20 lines if no specific errors found
+                        ($cleanupOutput | Select-Object -Last 20 | Out-String).Trim()
+                    }
+                    return @{ Success = $false; Message = "Cleanup failed"; ExitCode = $cleanupExitCode; ErrorDetails = $errorText }
                 }
             }
             Arguments = @($solutionName, $solutionBaseName, $config.resharper.cleanupProfile)
@@ -228,16 +242,49 @@ function Get-TaskDefinitions {
             param($solution, $checkOnly, $verbosity)
 
             if ($checkOnly) {
-                dotnet format $solution --verify-no-changes --verbosity $verbosity 2>&1 | Out-Null
-                $result = $LASTEXITCODE
-                return @{ Success = ($result -eq 0); Message = "Format verification"; ExitCode = $result }
+                $formatOutput = dotnet format $solution --verify-no-changes --verbosity $verbosity 2>&1
+                $formatExitCode = $LASTEXITCODE
+                
+                if ($formatExitCode -ne 0) {
+                    # Extract error messages - look for actual errors, not just the help text
+                    $errorLines = $formatOutput | Where-Object { $_ -match "(error |warning |\.cs\()" }
+                    $errorText = if ($errorLines) { 
+                        ($errorLines | Select-Object -First 10 | Out-String).Trim() 
+                    } else { 
+                        # Show last 20 lines if no specific errors found
+                        ($formatOutput | Select-Object -Last 20 | Out-String).Trim()
+                    }
+                    return @{ Success = $false; Message = "Format verification failed"; ExitCode = $formatExitCode; ErrorDetails = $errorText }
+                }
+                return @{ Success = $true; Message = "Format verification"; ExitCode = $formatExitCode }
             } else {
-                dotnet format $solution --verbosity $verbosity 2>&1 | Out-Null
-                return @{ Success = ($LASTEXITCODE -eq 0); Message = "Format completed"; ExitCode = $LASTEXITCODE }
+                $formatOutput = dotnet format $solution --verbosity $verbosity 2>&1
+                $formatExitCode = $LASTEXITCODE
+                
+                if ($formatExitCode -ne 0) {
+                    # Extract error messages - look for actual errors, not just the help text
+                    $errorLines = $formatOutput | Where-Object { $_ -match "(error |warning |\.cs\()" }
+                    $errorText = if ($errorLines) { 
+                        ($errorLines | Select-Object -First 10 | Out-String).Trim() 
+                    } else { 
+                        # Show last 20 lines if no specific errors found
+                        ($formatOutput | Select-Object -Last 20 | Out-String).Trim()
+                    }
+                    return @{ Success = $false; Message = "Format failed"; ExitCode = $formatExitCode; ErrorDetails = $errorText }
+                }
+                return @{ Success = $true; Message = "Format completed"; ExitCode = $formatExitCode }
             }
         }
         Arguments = @($solutionName, $checkOnly, $config.build.verbosity)
     }
+
+    return $tasks
+}
+
+function Get-ReadTaskDefinitions {
+    param($config, $solutionName)
+
+    $tasks = @()
 
     # Task 3: Build
     $tasks += @{
@@ -353,50 +400,92 @@ if ($useCache) { Write-Host "  - Cache enabled" -ForegroundColor Gray }
 Write-Host ""
 
 # ===========================================
-# Parallel Task Execution
+# Phase 1: Sequential Write Tasks
 # ===========================================
-Write-Host "Executing tasks in parallel..." -ForegroundColor Yellow
+Write-Host "Phase 1: File modification tasks (sequential)..." -ForegroundColor Yellow
 Write-Host ""
 
-$tasks = Get-TaskDefinitions $config $solutionName $solutionBaseName $CheckOnly $SkipReSharper $SkipSonar
+$writeTasks = Get-WriteTaskDefinitions $config $solutionName $solutionBaseName $CheckOnly $SkipReSharper
 
-if ($tasks.Count -gt 0) {
+# Execute write tasks sequentially
+foreach ($task in $writeTasks) {
+    $taskName = $task.Name
+    
     try {
-        $taskResults = Invoke-ParallelTasks -Tasks $tasks -MaxJobs $config.general.maxParallelJobs
+        # Use argument list directly without @() wrapper
+        $result = Invoke-Command -ScriptBlock $task.ScriptBlock -ArgumentList $task.Arguments
+        $script:TaskResults[$taskName] = $result
 
-        # Process results
-        foreach ($taskName in $taskResults.Keys) {
+        switch ($taskName) {
+            "ReSharperCleanup" {
+                Write-Host "[1/6] ReSharper Cleanup..." -ForegroundColor Yellow
+                if ($result.Success) {
+                    Write-Host "  ✓ $($result.Message)" -ForegroundColor Green
+                    if ($result.FixedFiles -gt 0) {
+                        $script:FixedFileCount += $result.FixedFiles
+                        Write-Host "    Fixed $($result.FixedFiles) file(s)" -ForegroundColor Gray
+                    }
+                } else {
+                    Write-Host "  ✗ $($result.Message)" -ForegroundColor Red
+                    if ($result.ErrorDetails) {
+                        Write-Host ""
+                        Write-Host "  Error details:" -ForegroundColor Yellow
+                        $result.ErrorDetails -split "`n" | Select-Object -First 15 | ForEach-Object {
+                            Write-Host "    $_" -ForegroundColor DarkGray
+                        }
+                    }
+                    $script:ErrorCount++
+                }
+            }
+            "DotNetFormat" {
+                Write-Host "[2/6] dotnet format..." -ForegroundColor Yellow
+                if ($result.Success) {
+                    Write-Host "  ✓ $($result.Message)" -ForegroundColor Green
+                } else {
+                    if ($CheckOnly) {
+                        Write-Host "  ✗ Format issues found" -ForegroundColor Red
+                    } else {
+                        Write-Host "  ⚠ Some files could not be formatted" -ForegroundColor Yellow
+                        $script:WarningCount++
+                    }
+                    if ($result.ErrorDetails) {
+                        Write-Host ""
+                        Write-Host "  Error details:" -ForegroundColor Yellow
+                        $result.ErrorDetails -split "`n" | Select-Object -First 15 | ForEach-Object {
+                            Write-Host "    $_" -ForegroundColor DarkGray
+                        }
+                    }
+                    $script:ErrorCount++
+                }
+            }
+        }
+        Write-Host ""
+    } catch {
+        Write-Host "✗ Error executing $taskName`: $($_.Exception.Message)" -ForegroundColor Red
+        $script:ErrorCount++
+        Write-Host ""
+    }
+}
+
+# ===========================================
+# Phase 2: Parallel Read Tasks
+# ===========================================
+Write-Host "Phase 2: Analysis tasks (parallel)..." -ForegroundColor Yellow
+Write-Host ""
+
+$readTasks = Get-ReadTaskDefinitions $config $solutionName
+
+if ($readTasks.Count -gt 0) {
+    try {
+        $taskResults = Invoke-ParallelTasks -Tasks $readTasks -MaxJobs $config.general.maxParallelJobs
+
+        # Process results (create array copy of keys to avoid enumeration issues)
+        $taskNames = @($taskResults.Keys)
+        foreach ($taskName in $taskNames) {
             $result = $taskResults[$taskName]
             $script:TaskResults[$taskName] = $result
 
             switch ($taskName) {
-                "ReSharperCleanup" {
-                    Write-Host "[1/6] ReSharper Cleanup..." -ForegroundColor Yellow
-                    if ($result.Success) {
-                        Write-Host "  ✓ $($result.Message)" -ForegroundColor Green
-                        if ($result.FixedFiles -gt 0) {
-                            $script:FixedFileCount += $result.FixedFiles
-                            Write-Host "    Fixed $($result.FixedFiles) file(s)" -ForegroundColor Gray
-                        }
-                    } else {
-                        Write-Host "  ✗ $($result.Message)" -ForegroundColor Red
-                        $script:ErrorCount++
-                    }
-                }
-                "DotNetFormat" {
-                    Write-Host "[2/6] dotnet format..." -ForegroundColor Yellow
-                    if ($result.Success) {
-                        Write-Host "  ✓ $($result.Message)" -ForegroundColor Green
-                    } else {
-                        if ($CheckOnly) {
-                            Write-Host "  ✗ Format issues found" -ForegroundColor Red
-                        } else {
-                            Write-Host "  ⚠ Some files could not be formatted" -ForegroundColor Yellow
-                            $script:WarningCount++
-                        }
-                        $script:ErrorCount++
-                    }
-                }
                 "Build" {
                     Write-Host "[3/6] Build & Warnings..." -ForegroundColor Yellow
                     if ($result.Success) {
