@@ -202,4 +202,48 @@ public class ArgsHelperTests
         // Assert
         Assert.Equal(["-"], result);
     }
+
+    [Fact]
+    public void PreprocessArgs_WithDoubleHyphen_ShouldPreserve()
+    {
+        // Arrange
+        string[] args = ["--"];
+        string[] flagArgs = [];
+        string[] shortArgs = [];
+
+        // Act
+        var result = ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs);
+
+        // Assert
+        Assert.Equal(["--"], result);
+    }
+
+    [Fact]
+    public void PreprocessArgs_WithDoubleHyphenAndOtherArgs_ShouldPreserveAll()
+    {
+        // Arrange
+        string[] args = ["--IsFlag", "--", "-uvalue"];
+        string[] flagArgs = ["--IsFlag"];
+        string[] shortArgs = ["-u"];
+
+        // Act
+        var result = ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs);
+
+        // Assert
+        // "--" の前は処理、"--" 以降はそのまま保持
+        Assert.Equal(["--IsFlag", "true", "--", "-uvalue"], result);
+    }
+
+    [Fact]
+    public void PreprocessArgs_WithNullElementInArgs_ShouldThrowArgumentException()
+    {
+        // Arrange
+        string[] args = ["--IsFlag", null!, "value"];
+        string[] flagArgs = ["--IsFlag"];
+        string[] shortArgs = [];
+
+        // Act & Assert
+        var exception = Assert.Throws<ArgumentException>(() => ArgsHelper.PreprocessArgs(args, flagArgs, shortArgs));
+        Assert.Contains("null", exception.Message);
+    }
 }

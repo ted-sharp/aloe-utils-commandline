@@ -20,12 +20,17 @@ public static class ArgsHelper
     /// 1. フラグオプションの処理（--IsFlag → --IsFlag true）
     /// 2. 短いオプションの処理（-avalue → -a value）
     /// 3. その他の引数はそのまま保持
+    ///
+    /// 特殊な処理：
+    /// - "--" 以降の引数は、すべてそのまま保持されます（POSIX スタイル）
+    /// - null 要素が含まれる場合は例外をスローします
     /// </remarks>
     /// <param name="args">処理対象のコマンドライン引数</param>
     /// <param name="flagArgs">フラグとして扱うオプションのリスト（例：--IsFlag）</param>
     /// <param name="shortArgs">短いオプションのリスト（例：-u, -p）</param>
     /// <returns>前処理されたコマンドライン引数を返します。</returns>
     /// <exception cref="ArgumentNullException">引数がnullの場合にスローされます。</exception>
+    /// <exception cref="ArgumentException">args配列内にnull要素が含まれる場合にスローされます。</exception>
     public static string[] PreprocessArgs(
         string[] args,
         IEnumerable<string> flagArgs,
@@ -39,19 +44,44 @@ public static class ArgsHelper
 
         // HashSetを使用して検索パフォーマンスを最適化
         var flags = new HashSet<string>(flagArgs);
-        var sortedShorts = shortArgs.OrderByDescending(s => s.Length).ToArray();
+        var sortedShortArgs = shortArgs.OrderByDescending(s => s.Length).ToArray();
+
+        var afterDoubleDash = false;
 
         for (var i = 0; i < args.Length; i++)
         {
             var currentArg = args[i];
+
+            // null 要素チェック
+            if (currentArg is null)
+            {
+                throw new ArgumentException("Arguments array contains null element.", nameof(args));
+            }
+
+            // "--" 以降はそのまま保持
+            if (afterDoubleDash)
+            {
+                processedArgs.Add(currentArg);
+                continue;
+            }
+
+            // "--" の検出
+            if (currentArg == "--")
+            {
+                processedArgs.Add(currentArg);
+                afterDoubleDash = true;
+                continue;
+            }
 
             // フラグオプションの処理
             if (flags.Contains(currentArg))
             {
                 processedArgs.Add(currentArg);
 
-                // 次のトークンが存在しない、または '-' で始まるなら "true" を付与
-                if (i + 1 >= args.Length || args[i + 1].StartsWith('-'))
+                // 次のトークンが存在しない、null、または '-' で始まるなら "true" を付与
+                if (i + 1 >= args.Length ||
+                    args[i + 1] is null ||
+                    args[i + 1].StartsWith('-'))
                 {
                     processedArgs.Add("true");
                 }
@@ -60,7 +90,7 @@ public static class ArgsHelper
             }
 
             // 短いオプションの処理
-            if (TryHandleShortOption(currentArg, sortedShorts, processedArgs))
+            if (TryHandleShortOption(currentArg, sortedShortArgs, processedArgs))
             {
                 continue;
             }
@@ -86,12 +116,12 @@ public static class ArgsHelper
     /// 3. オプションと値の分割（必要な場合）
     /// </remarks>
     /// <param name="arg">処理対象の引数</param>
-    /// <param name="sortedShortOptions">長さ降順でソートされた短いオプションの配列</param>
+    /// <param name="sortedShortArgs">長さ降順でソートされた短いオプションの配列</param>
     /// <param name="processedArgs">処理済みの引数リスト</param>
     /// <returns>短いオプションとして処理された場合はtrue、それ以外はfalse</returns>
     private static bool TryHandleShortOption(
         string arg,
-        string[] sortedShortOptions,
+        string[] sortedShortArgs,
         List<string> processedArgs)
     {
         // 基本的な形式チェック：'-'で始まり、長さが2以上であることを確認
@@ -102,7 +132,7 @@ public static class ArgsHelper
 
         // 決定論的に最長一致で判定する（例: "-ab" と "-a" が両方ある場合は "-ab" を優先）
         // 短いオプションは既に長さ降順でソート済み
-        foreach (var shortOpt in sortedShortOptions)
+        foreach (var shortOpt in sortedShortArgs)
         {
             if (arg.StartsWith(shortOpt, StringComparison.Ordinal))
             {
