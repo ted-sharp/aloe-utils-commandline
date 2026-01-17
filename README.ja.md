@@ -6,7 +6,7 @@
 [![NuGet Version](https://img.shields.io/nuget/v/Aloe.Utils.CommandLine.svg)](https://www.nuget.org/packages/Aloe.Utils.CommandLine)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Aloe.Utils.CommandLine.svg)](https://www.nuget.org/packages/Aloe.Utils.CommandLine)
 [![License](https://img.shields.io/github/license/ted-sharp/aloe-utils-commandline.svg)](LICENSE)
-[![.NET](https://img.shields.io/badge/.NET-9.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/9.0)
+[![.NET](https://img.shields.io/badge/.NET-10.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/10.0)
 
 `Aloe.Utils.CommandLine` は、コマンドライン引数を柔軟に前処理する軽量ユーティリティです。  
 `--flag` のようなブールオプションの補完や、`-uadmin` のような短縮オプションと値の連結にも対応しています。  
@@ -21,7 +21,7 @@
 
 ## 対応環境
 
-* .NET 9 以降
+* .NET 10 以降
 * Microsoft.Extensions.Configuration と併用可能
 
 ## Install

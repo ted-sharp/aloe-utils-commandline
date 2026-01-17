@@ -10,7 +10,7 @@ This is Aloe.Utils.CommandLine - a lightweight C# utility library for preprocess
 2. Split concatenated short options (`-uadmin` → `-u admin`)
 3. Use longest-match prioritization for overlapping short options
 
-The library is designed to work seamlessly with Microsoft.Extensions.Configuration and supports .NET 9.0.
+The library is designed to work seamlessly with Microsoft.Extensions.Configuration and supports .NET 10.0.
 
 ## Solution Structure
 
@@ -83,7 +83,7 @@ Tests are comprehensive and cover:
 
 ## NuGet Package Configuration
 
-- Targets .NET 9.0
+- Targets .NET 10.0
 - AOT and trimming compatible
 - Includes StyleCop and code analysis
 - Generates documentation XML and symbol packages

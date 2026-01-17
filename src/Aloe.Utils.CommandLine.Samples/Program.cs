@@ -21,7 +21,7 @@ public static class AppConfig
         "-c",
     ];
 
-    public static readonly IReadOnlyDictionary<string, string> Aliases = new Dictionary<string, string>
+    public static readonly IDictionary<string, string> Aliases = new Dictionary<string, string>
     {
         { "--standalone", "AppSettings:IsStandalone" },
         { "--debug", "AppSettings:IsDebug" },
@@ -40,7 +40,7 @@ public static class AppConfig
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: true)
             .AddJsonFile("appsettings.Development.json", optional: true)
-            .AddUserSecrets<Program>(optional: true)
+            .AddUserSecrets<App>(optional: true)
             .AddEnvironmentVariables()
             .AddCommandLine(processedArgs, Aliases);
 
@@ -87,7 +87,7 @@ public class App
 
     public int Run()
     {
-        Console.WriteLine("アプリケーションの設定:");
+        Console.WriteLine("アプリケーションの設定");
         Console.WriteLine($"スタンドアロンモード: {this._appSettings.IsStandalone}");
         Console.WriteLine($"デバッグモード: {this._appSettings.IsDebug}");
         Console.WriteLine($"ユーザー名: {this._appSettings.Username}");
